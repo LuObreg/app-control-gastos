@@ -1,0 +1,6 @@
+PROBLEMAS
+
+routeo new transaction
+get ultimas transacciones
+hacer user-logged global
+modificar valores de transacciones en la tabla

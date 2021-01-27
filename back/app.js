@@ -1,11 +1,17 @@
+const { constants } = require('buffer');
 const express = require('express');
 const mysql = require('mysql');
 const util = require('util');
+const cors = require('cors');
+
+
 
 const PORT = 3000;
 
 const app = express();
 app.use(express.json());
+app.use(cors());
+
 
 //Connect to MySQL
 var connecting = mysql.createConnection(
@@ -49,10 +55,10 @@ app.get("/transaction/:in_out", async (req, res)=>{
 });
 
 //Get: balance
-app.get("/users/:username", async (req, res)=>{
+app.get("/users/:userid", async (req, res)=>{
     try{
         //verify value
-        var user_logged = await connecting.query('SELECT id FROM users WHERE username = ?', req.params.username);
+        const user_logged = req.params.userid;
         var current_balance = await connecting.query('SELECT balance FROM users WHERE id = ?', user_logged);
 
         res.status(200).send(current_balance);
