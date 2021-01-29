@@ -1,6 +1,7 @@
 PROBLEMAS
 
-routeo new transaction
-get ultimas transacciones
-hacer user-logged global
-modificar valores de transacciones en la tabla
+modificar valores de transacciones en la tabla 
+estilzar nombres de usuario
+arreglar formulario cuando se achica la pantalla
+cuando se hace el post de la transacción se resetean los campos
+alert con confirmación y errores para el post

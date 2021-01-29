@@ -28,24 +28,11 @@ connecting.connect();
 connecting.query = util.promisify(connecting.query);
 
 
-var user_logged = 1;
-//Get: last transactions NO FUNCIONA, QUEDA PENSANDO TIPO LOOP
-app.get("/transaction", async (req, res)=>{
+//Get: last transactions
+app.get("/transaction/:id", async (req, res)=>{
     try{
         let response = null;
-        response = await connecting.query("SELECT * FROM transaction WHERE user_id = ? ORDER BY date DESC LIMIT 10", user_logged);
-    }
-    catch(e){
-        console.log(e);
-        res.status(422).send(e);
-    }
-})
-
-//Get: income or expenses
-app.get("/transaction/:in_out", async (req, res)=>{
-    try{
-        let response = null;
-        response = await connecting.query("SELECT * FROM transaction WHERE in_out = ? AND user_id = ?", [req.params.in_out, user_logged]);
+        response = await connecting.query("SELECT * FROM transaction WHERE user_id = ? ORDER BY date DESC LIMIT 10", req.params.id);
         res.status(200).send(response);
     }
     catch(e){
@@ -54,15 +41,54 @@ app.get("/transaction/:in_out", async (req, res)=>{
     }
 });
 
+//Get: income or expenses
+app.get("/transaction/:id/:in_out", async (req, res)=>{
+    try{
+        let response = null;
+        response = await connecting.query("SELECT * FROM transaction WHERE in_out = ? AND user_id = ?", [req.params.in_out, req.params.id]);
+        res.status(200).send(response);
+    }
+    catch(e){
+        console.log(e);
+        res.status(422).send(e)
+    }
+});
+
+//Get: users
+app.get("/users", async (req, res)=>{
+    try{
+        let response = null;
+        response = await connecting.query("SELECT username, id FROM users");
+        res.status(200).send(response);
+    }
+    catch(e){
+        console.log(e);
+        res.status(422).send(e);
+    }
+})
+
 //Get: balance
 app.get("/users/:userid", async (req, res)=>{
     try{
         //verify value
         const user_logged = req.params.userid;
-        var current_balance = await connecting.query('SELECT balance FROM users WHERE id = ?', user_logged);
+        var current_balance = await connecting.query('SELECT balance, username FROM users WHERE id = ?', user_logged);
 
         res.status(200).send(current_balance);
 
+    }
+    catch(e){
+        console.error(e);
+        res.status(422).send(e);
+    }
+});
+
+//Update: balance
+app.put("/users/:amount", async (req, res)=>{
+    try{
+        let response = null;
+        response = await connecting.query('UPDATE users SET balance = (balance + ?) WHERE id = ?', [req.body.amount, user_logged]);
+        res.status(200).send(response);
     }
     catch(e){
         console.error(e);
@@ -109,8 +135,7 @@ app.post("/transaction", async (req, res)=>{
 
         
         let response = null;
-        response = await connecting.query('INSERT INTO transaction (amount, category, user_id, in_out) VALUES (?, ?, ?, ?); UPDATE users SET balance = (balance + ?) WHERE id = ?', [amount, category, user_logged, in_out], [amount, user_logged]);
-        //FALTA QUE FUNCIONE EL UPDATE
+        response = await connecting.query('INSERT INTO transaction (amount, category, user_id, in_out) VALUES (?, ?, ?, ?)', [amount, category, user_logged, in_out]);
 
         res.status(200).send(response);
 
@@ -119,11 +144,8 @@ app.post("/transaction", async (req, res)=>{
         console.error(e);
         res.status(422).send(e);
     }
-})
-
-
-
+});
 
 app.listen(PORT, ()=>{
     console.log('listening on port ' + PORT);
-})
+});
