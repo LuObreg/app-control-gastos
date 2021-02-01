@@ -1,0 +1,37 @@
+<div class="container-sm">
+
+
+<div class="card">
+  <h3 class="card-header text-center font-weight-bold text-uppercase py-4">See all transactions
+    <div class="btn-group">
+    <button (click)="listTransactionsType(type='in')" class="btn btn-info">INCOME</button><button (click)="listTransactionsType(type='out')" class="btn btn-info">EXPENSES</button>
+    </div>
+  </h3>
+  <div class="card-body">
+    <div id="table" class="table-editable">
+      <table class="table table-bordered table-responsive-md table-striped text-center">
+        <thead><tr><th>Category</th><th>Amount</th><th>Date</th><th>Remove entry</th>
+        </tr>
+      </thead>
+        <tbody>
+        <tr *ngFor='let transaction of transactions'>
+          <td>
+            <span (keyup)="changeValue(id, 'category', $event)" (blur)="updateList(id, 'category', $event)" contenteditable="true" ng-change="modifyTransaction(transaction)" >{{transaction.category}}</span>
+          </td>
+          <td>
+            <span contenteditable="true" (keyup)="changeValue(id, 'amount', $event)" (blur)="updateList(id, 'amount', $event)" ng-change="modifyTransaction(transaction)">{{transaction.amount}}</span>
+          </td>
+          <td>
+            {{transaction.date}}
+          </td>
+          <td>
+            <span class="table-remove">
+              <button type="button" btn color="danger" rounded="true" size="sm" class="my-0" (click)="removeTransaction(transaction.id)">Remove</button>
+            </span>
+          </td>
+        </tr>
+      </tbody>
+      </table>
+    </div>
+  </div>
+</div>

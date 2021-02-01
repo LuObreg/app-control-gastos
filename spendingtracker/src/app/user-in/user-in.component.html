@@ -1,0 +1,11 @@
+<div class="container">
+  <h2><p>Select your user</p>  </h2>
+    <form (ngSubmit)='selectUser()'>
+        <select name="username" [(ngModel)]="userid">
+            <option *ngFor="let _user of usernames" [value]="_user.id">
+              {{ _user.username }}
+            </option>
+          </select>
+          <button class="btn btn-secondary" type="submit">Select</button>
+    </form>
+</div>

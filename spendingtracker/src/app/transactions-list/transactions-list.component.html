@@ -1,0 +1,16 @@
+<div class="container">
+    <h5>Last transactions</h5>
+    <table class="table table-bordered border-primary">
+        <thead>
+            <tr class="table-info"><td>Category</td><td>Amount</td><td>Type</td><td>Date</td></tr>
+        </thead>
+        <tbody>
+            <tr *ngFor='let transaction of transactions'>
+                <td>{{transaction.category}}</td>
+                <td>{{transaction.amount}}</td>
+                <td>{{transaction.in_out}}</td>
+                <td>{{transaction.date}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
