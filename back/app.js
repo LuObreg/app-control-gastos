@@ -3,6 +3,7 @@ const express = require('express');
 const mysql = require('mysql');
 const util = require('util');
 const cors = require('cors');
+const { response } = require('express');
 
 
 
@@ -84,10 +85,11 @@ app.get("/users/:userid", async (req, res)=>{
 });
 
 //Update: balance
-app.put("/users/:amount", async (req, res)=>{
+app.put("/users", async (req, res)=>{
     try{
+        let balance = req.body;
         let response = null;
-        response = await connecting.query('UPDATE users SET balance = (balance + ?) WHERE id = ?', [req.body.amount, user_logged]);
+        response = await connecting.query('UPDATE users SET balance = (balance + ?) WHERE id = ?', [balance.amount, balance.user_id]);
         res.status(200).send(response);
     }
     catch(e){
@@ -117,6 +119,7 @@ app.post("/transaction", async (req, res)=>{
         let amount = req.body.amount;
         let category = req.body.category;
         let in_out = req.body.in_out;
+        let user_id = req.body.user_id;
 
         if(amount < 0 || amount == undefined || amount == ''){
             throw new Error ('Please insert a valid amount.');
@@ -126,17 +129,14 @@ app.post("/transaction", async (req, res)=>{
         }
         if(in_out != "in" && in_out != "out"){
             throw new Error ('Please select a valid operation.');
+        }        
+        if(user_id == undefined || user_id == ''){
+            throw new Error ('Please select your user.')
         }
-
-        //Transform amount according to the transaction
-        if(in_out == 'out'){
-            amount == 0 - amount;
-        }
+        let response = null;
+        response = await connecting.query('INSERT INTO transaction (amount, category, user_id, in_out) VALUES (?, ?, ?, ?)', [amount, category, user_id, in_out]);
 
         
-        let response = null;
-        response = await connecting.query('INSERT INTO transaction (amount, category, user_id, in_out) VALUES (?, ?, ?, ?)', [amount, category, user_logged, in_out]);
-
         res.status(200).send(response);
 
     }
@@ -145,6 +145,19 @@ app.post("/transaction", async (req, res)=>{
         res.status(422).send(e);
     }
 });
+
+//Delete transaction
+app.delete("/transaction/:userid/:id", async(req, res)=>{
+    try{
+        let response = null;
+        response = await connecting.query('DELETE FROM transaction WHERE user_id = ? AND id = ?', [req.params.userid, req.params.id]);
+        res.status(200).send(response);
+    }
+    catch(e){
+        console.error(e);
+        res.status(422).send(e);
+    }
+})
 
 app.listen(PORT, ()=>{
     console.log('listening on port ' + PORT);
