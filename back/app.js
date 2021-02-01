@@ -33,7 +33,7 @@ connecting.query = util.promisify(connecting.query);
 app.get("/transaction/:id", async (req, res)=>{
     try{
         let response = null;
-        response = await connecting.query("SELECT * FROM transaction WHERE user_id = ? ORDER BY date DESC LIMIT 10", req.params.id);
+        response = await connecting.query("SELECT id, amount, category, date, user_id, in_out FROM transaction WHERE user_id = ? ORDER BY date DESC LIMIT 10", req.params.id);
         res.status(200).send(response);
     }
     catch(e){

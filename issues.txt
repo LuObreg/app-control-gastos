@@ -1,11 +1,32 @@
-PROBLEMAS
+TO-DO
 
-modificar valores de transacciones en la tabla 
-estilzar nombres de usuario
-estilizar fecha
+GET LAST TRANSACTIONS
+    FORMATEAR fecha
+    FORMATEAR VALOR MONEDA EN TABLA
 
-cuando se hace el post de la transacción se resetean los campos
-alert con confirmación y errores para el post
-arreglar formulario cuando se achica la pantalla
+GET INCOME OR EXP
+    AGREGAR FUNCIONES A LA TABLA DINAMICA
+    FORMATEAR fecha
+    FORMATEAR VALOR MONEDA EN TABLA
 
-AGREGAR FUNCIONES A LA TABLA DINAMICA
+GET USERS
+     ESTILIZAR nombres (camelcase)
+
+GET BALANCE
+    estilizar formato moneda
+
+UPDATE BALANCE
+-
+
+UPDATE FORMER TRANSACTIONS
+    arreglar FUNCIONES en la interaccion con tabla
+
+CREATE NEW INCOME/EXPENSE
+    arreglar alert
+    resetear campos desp del post
+
+DELETE TRANSACTION
+    arreglar la funcion en la tabla
+
+
+
